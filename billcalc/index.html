@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="app.css">
+    
+    <title>BILL CALCULATOR</title>
+<!-- google api for access map -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCnMxDj8iMQA8-IYAbUk5WdIbDySZD5e0E"
+    type="text/javascript"></script>
+<!-- navigator.geolocation helps to find the currrent location -->
+    <script>
+     if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function (p) {
+                //coords are usedd to get coordinates from position
+                var LatLng = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+                //the mapOptions are map properties to where to point and how much zoom we want.
+                var mapOptions = {
+                    center: LatLng,
+                    zoom: 13,
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                //to get map in our document
+                var map = new google.maps.Map(document.getElementById("map"), mapOptions);
+                //to get marker for our map
+                var marker = new google.maps.Marker({
+                    position: LatLng,
+                    map: map,
+                    title: "<div style = 'height:60px;width:200px'><b>Your location:</b><br />Latitude: " + p.coords.latitude + "<br />Longitude: " + p.coords.longitude
+                });
+                google.maps.event.addListener(marker, "click", function (e) {
+                    var infoWindow = new google.maps.InfoWindow();
+                    infoWindow.setContent(marker.title);
+                    infoWindow.open(map, marker);
+                });
+            });
+        } else {
+            alert('Geo Location feature is not supported in this browser.');
+        } 
+           
+    </script>       
+    
+ <!-- function initMap(){
+    navigator.geolocation.getCurrentPosition(success, failure);
+
+    function success(position)
+    {
+     const latitude = position.coords.latitude;
+     const longitude = position.coords.longitude;
+            console.log(longitude);
+        const coOrds = new google.maps.LatLng(latitude,longitude);
+           console.log(coOrds);
+        const mapOptions = {
+            zoom : 9,
+            center : coOrds,
+            mapTypeId : google.maps.MapTypeId.ROADMAP
+        } 
+        const map = new google.maps.Map(document.getElementById("map"),mapOptions);
+        const marker = new google.map.Marker({map:map, position:coords});
+        
+    }
+
+    
+    function failure(){}
+    }  -->
+
+    
+</head>
+<body>
+    <div class="container d-flex justify-content-center align-items-center mt-5 mb-3">
+        <div class="row">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-body">
+                <h4>BILL TIP CALCULATOR</h4>
+                    <div class="main">
+                                             
+                         <!-- <label class="form-label mt-1" for="billAmount">BILL AMOUNT ₹</label> -->
+                            <input class="mt-3 form-control" type="number" placeholder="Enter the amount" id="billAmount" name="billAmount">
+                         <!-- <label class="form-label mt-1" for="noOfPersons">TOTAL PERSONS</label> -->
+                            <input class="mt-3 form-control" type="number" placeholder="Enter the persons" id="noOfPersons" name="noOfPersons">   
+                        
+                           <!--  <label class="form-label mt-1" for="rating">RATING</label> -->
+                             <select class="mt-3 form-select" name="ratingForTip" id="ratingForTip" >
+                                    <option selected disabled hidden>Select your option</option>
+                                    <option value="0.02">POOR</option>
+                                    <option value="0.04">BAD</option>
+                                    <option value="0.06">AVERAGE</option>
+                                    <option value="0.08">GOOD</option>
+                                    <option value="0.1">OUTSTANDING</option>
+                             </select>
+                             <div class="d-grid gap-2 col-6 mx-auto">
+                                    <button class="button mt-3 btn btn-success" id="calculate"><span>CALCULATE</span></button></p> 
+                                </div>
+            </div>
+       
+                    <!-- <label class="form-label mt-1" for="tipsy">TIP AMOUNT</label>
+                     <input class="form-control" type="number" placeholder="0" id="tipsy" name="tipsy"> 
+                    <label class="form-label mt-1" for="total">TOTAL AMOUNT</label>
+                    <input class="form-control" type="number" placeholder="0" id="total" name="total"> 
+                    <label class="form-label mt-1" for="peopleShare">SHARE(PER PERSON)</label>
+                    <input class="form-control" type="number" placeholder="None" id="peopleShare" name="peopleShare">  -->
+                    <div>
+                        <!-- tipamount is based on totalbill and rating -->
+                        <p><b>Tip amount: <span id="totalTips">0</span></b></p>
+                        <!-- total amount is total of totalbill and totaltip -->
+                        <p><b>Total amount: <span id="totalAmount">0</span></b></p>
+                        <!-- peopleshare is sharing bill with no.of frds.
+                        here, totalbill/noOfPersons  -->
+                        <p><b>Each person shares: <span id="peopleShare">0</span></b></p>
+        
+                    </div>
+
+
+                    <div class="mt-3" id="map"></div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+<script src="app.js"></script>
+
+</body>
+</html>
